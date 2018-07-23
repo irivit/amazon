@@ -58,7 +58,6 @@ function menu() {
         }]).then(function (answer) {
             checkStock(answer.id, answer.quantity);
             if (available) {
-                console.log(available);
                 updateStock(answer.quantity, answer.id);
                 checkOut(answer.id, answer.quantity);
             } else {
@@ -77,11 +76,9 @@ function checkStock(id, quantity) {
                 available = false;
                 console.log(`Sorry, we don't have enough ${res[i].product_name} in stock. There're ${res[i].stock_quantity} items availables.`);
             }
-            console.log(available);
         }
-        console.log(available);
     });
-    console.log(available);
+
 }
 
 function updateStock(quantity, id) {
