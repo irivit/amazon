@@ -2,7 +2,7 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
 
-var available = true;
+available = true;
 var cartIds = [];
 var cartQuantities = [];
 var stock = 0;
@@ -57,24 +57,25 @@ function menu() {
             message: "How many products do you want to buy?",
         }]).then(function (answer) {
             checkStock(answer.id, answer.quantity);
-            if (available) {
-                updateStock(answer.quantity, answer.id);
-                checkOut(answer.id, answer.quantity);
-            } else {
-                console.log("Insufficient quantity!");
-                menu();
-            }
+            console.log(1 ,available)
+
 
         });
 }
 
 function checkStock(id, quantity) {
+
     var query = "SELECT stock_quantity FROM products WHERE item_id = ?";
     connection.query(query, [id], function (err, res) {
         for (let i = 0; i < res.length; i++) {
             if (res[i].stock_quantity < quantity) {
-                available = false;
+                // console.log("Insufficient quantity!");
                 console.log(`Sorry, we don't have enough ${res[i].product_name} in stock. There're ${res[i].stock_quantity} items availables.`);
+                menu();    
+            
+            }else{
+                updateStock(answers.quantity, answers.id);
+                checkOut(answers.id, answers.quantity);
             }
         }
     });

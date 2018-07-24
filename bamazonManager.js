@@ -39,6 +39,7 @@ function menu() {
                 }
                 case "Add to Inventory": {
                     addInventory();
+                    
                     break;
                 }
                 case "New Product": {
@@ -74,6 +75,8 @@ function lowerInventory() {
     var query = "SELECT product_name,  stock_quantity FROM  products WHERE  stock_quantity <= 5;"
     connection.query(query, function (err, resp) {
         if (err) throw err;
+        console.log(`
+        `);
         var table = new Table({
             chars: {
                 'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
@@ -114,6 +117,7 @@ function addInventory() {
                     });
                 }
             });
+            menu();
         });
 }
 
@@ -140,5 +144,6 @@ function addNewProduct() {
                 if (err) throw err;
                 console.log(resp);
             });
+            menu();
         });
 }
