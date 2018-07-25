@@ -157,8 +157,8 @@ function addNewProduct() {
             var query = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (?, ?, ?, ?)";
             connection.query(query, [answer.name, answer.department, parseFloat(answer.price), answer.price], function (err, resp) {
                 if (err) throw err;
-                console.log(resp);
             });
+            
             menu();
         });
 }
