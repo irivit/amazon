@@ -2,7 +2,7 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
 
-
+//function to stablish connection
 var connection = mysql.createConnection({
     host: "localhost",
     // Your port; if not 3306
@@ -20,14 +20,17 @@ connection.connect(function (err) {
 
 });
 
+//this function will function like a menu for the user//this function will function like a menu for the user
 function menu() {
     inquirer.prompt([
         {
             name: "menu",
             message: "Menu:",
             type: "list",
-            choices: ["Products for Sale", "Low Inventory", "Add to Inventory", "New Product"],
+            choices: ["Products for Sale", "Low Inventory", "Add to Inventory", "New Product", "Exit"],
         }]).then(function (answer) {
+
+            // depending on the option picked for the chosen call the correct function
             switch (answer.menu) {
                 case "Products for Sale": {
                     showInventory();
@@ -46,11 +49,17 @@ function menu() {
                     addNewProduct();
                     break;
                 }
+                case "Exit": {
+                    connection.end();
+                    break;
+                }
             }
 
         });
 }
 
+
+// this function will show the invetory of the story in a table
 function showInventory() {
     var query = "SELECT * FROM products";
     connection.query(query, function (err, res) {
@@ -71,6 +80,8 @@ function showInventory() {
     });
 }
 
+
+//This function will show all the products with less than 5 items
 function lowerInventory() {
     var query = "SELECT product_name,  stock_quantity FROM  products WHERE  stock_quantity <= 5;"
     connection.query(query, function (err, resp) {
@@ -94,6 +105,8 @@ function lowerInventory() {
     menu();
 }
 
+
+//This function will allow the user restock the inventory
 function addInventory() {
     inquirer.prompt([
         {
@@ -121,6 +134,8 @@ function addInventory() {
         });
 }
 
+
+// tThis function will allow the user to insert a new product to the store
 function addNewProduct() {
     inquirer.prompt([
         {

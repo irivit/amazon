@@ -2,11 +2,7 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
 
-available = true;
-var cartIds = [];
-var cartQuantities = [];
-var stock = 0;
-
+//function to stablish connection
 var connection = mysql.createConnection({
     host: "localhost",
     // Your port; if not 3306
@@ -23,7 +19,7 @@ connection.connect(function (err) {
     showStoreInventary();
 });
 
-
+// this function will show the invetory of the story in a table
 function showStoreInventary() {
     var query = "SELECT * FROM products";
     connection.query(query, function (err, res) {
@@ -46,7 +42,7 @@ function showStoreInventary() {
 }
 
 
-
+//this function will function like a menu for the user
 function menu() {
     inquirer.prompt([
         {
@@ -57,31 +53,31 @@ function menu() {
             message: "How many products do you want to buy?",
         }]).then(function (answer) {
             checkStock(answer.id, answer.quantity);
-            console.log(1 ,available)
-
-
         });
 }
 
+
+// This function will check the availability of one product
 function checkStock(id, quantity) {
 
     var query = "SELECT stock_quantity FROM products WHERE item_id = ?";
     connection.query(query, [id], function (err, res) {
         for (let i = 0; i < res.length; i++) {
-            if (res[i].stock_quantity < quantity) {
-                // console.log("Insufficient quantity!");
+            if (res[i].stock_quantity < quantity) {  
                 console.log(`Sorry, we don't have enough ${res[i].product_name} in stock. There're ${res[i].stock_quantity} items availables.`);
                 menu();    
             
             }else{
-                updateStock(answers.quantity, answers.id);
-                checkOut(answers.id, answers.quantity);
+                updateStock(quantity, id);
+                checkOut(id, quantity);
             }
         }
     });
 
 }
 
+
+//This function will update the inventory once the user buy a product
 function updateStock(quantity, id) {
     var query = "SELECT stock_quantity FROM products WHERE item_id = ?";
     connection.query(query, [id], function (err, res) {
@@ -95,6 +91,7 @@ function updateStock(quantity, id) {
     });
 }
 
+//This function will process the check out of the user
 function checkOut(id, quantity) {
     var query = "SELECT price FROM products WHERE item_id = ?";
     connection.query(query, id, function (err, res) {
